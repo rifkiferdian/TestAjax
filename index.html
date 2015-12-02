@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Test Gamatekno</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body onload="viewdata()">
+    <p><br/></p>
+    <div class="container">
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+  Add Data
+</button>
+<div class="col-md-6">
+    <div id="custom-search-input">
+        <div class="input-group col-md-12">
+            <input type="text" class="form-control input-lg" id="sss" placeholder="institusi" />
+            <span class="input-group-btn">
+                <button onclick="searc()" class="btn btn-info btn-lg" type="button">
+                    <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+</div>
+<br/>
+
+
+<!-- Modal -->
+<div  class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add Data</h4>
+      </div>
+      <div class="modal-body">
+        
+      <form>
+        <div class="form-group">
+          <label for="nm">Nama</label>
+          <input type="text" class="form-control" id="nm">
+        </div>
+        <div class="form-group">
+          <label for="gd">Institusi</label>
+          <input type="text" class="form-control" id="gd">
+        </div>
+      </form>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="save" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>    
+
+
+<div id="info"></div>
+      <br/>
+      <div id="viewdata"></div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+    
+function viewdata(){
+  $.ajax({
+    type: "GET",
+    url: "php/getdata.php"
+    }).done(function( data ) {
+    $('#viewdata').html(data);
+    });
+  }
+
+  function back(){
+  $.ajax({
+    type: "GET",
+    url: "php/getdata.php"
+    }).done(function( data ) {
+    $('#viewdata').html(data);
+    });
+  }
+
+$('#save').click(function(){	
+	var nm = $('#nm').val();
+	var gd = $('#gd').val();
+	
+	var datas="nm="+nm+"&gd="+gd;
+      
+	$.ajax({
+	   type: "POST",
+	   url: "php/newdata.php",
+	   data: datas
+	}).done(function( data ) {
+	  $('#info').html(data);
+	  viewdata();
+	});
+    });
+
+function updatedata(str){
+	
+	var id = str;
+  console.log( id );
+	var nm = $('#nm'+str).val();
+	var gd = $('#gd'+str).val();	
+	var datas="nm="+nm+"&gd="+gd;
+      
+	$.ajax({
+	   type: "POST",
+	   url: "php/updatedata.php?id="+id,
+	   data: datas
+	}).done(function( data ) {
+	  $('#info').html(data);
+	  viewdata();
+	});
+    }
+
+function deletedata(str){
+  var id = str;   
+$.ajax({
+   type: "GET",
+   url: "php/deletedata.php?id="+id
+}).done(function( data ) {
+  $('#info').html(data);
+  viewdata();
+});
+  }
+
+
+function searc(){
+  var inp = $('#sss').val();
+
+$.ajax({
+   type: "GET",
+   url: "php/search.php?inp="+inp
+}).done(function( data ) {
+  $('#viewdata').html(data);
+});
+  }
+
+    </script>
+  </body>
+</html> 
